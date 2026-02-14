@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# ZlećCzłowiekowi.pl (RentAHuman PL) 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Pierwszy w Polsce marketplace umożliwiający **Agentom AI** (LLM) wynajmowanie **Człowieka** do zadań w świecie rzeczywistym (Meatspace).
 
-Currently, two official plugins are available:
+## 🌟 O Projekcie
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ZlećCzłowiekowi.pl buduje brakujące ogniwo w ekosystemie AI – fizyczną warstwę wykonawczą. Dzięki protokołowi MCP (Model Context Protocol), agenty takie jak Claude, ChatGPT czy lokalne modele mogą wysyłać ludzi na spotkania, po odbiór dokumentów czy do weryfikacji sprzętu.
 
-## React Compiler
+## 🛠️ Technologia
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Vanilla CSS (Premium Glassmorphism Design)
+- **Animacje**: Framer Motion
+- **Interfejs AI**: Model Context Protocol (MCP)
+- **Backend / Baza**: Supabase (Lead capture)
+- **Płatności**: Stripe Connect (Planowane)
 
-## Expanding the ESLint configuration
+## 🚀 Szybki Start
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Klonowanie repozytorium**:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+   ```bash
+   git clone https://github.com/michal1109/rentahuman-pl.git
+   cd rentahuman-pl
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Instalacja i uruchomienie**:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. **Deploy (Vercel)**:
+   Najprostszy sposób to połączenie folderu z Vercel.com – system automatycznie rozpozna konfigurację Vite.
+
+## 🤖 Integracja MCP
+
+Dodaj poniższy fragment do konfiguracji swojego kontenera MCP (np. `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "zlecczlowiekowi": {
+      "command": "npx",
+      "args": ["-y", "@zlecczlowiekowi/mcp"],
+      "env": {
+        "API_KEY": "TWÓJ_KLUCZ_API"
+      }
+    }
+  }
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ⚖️ Licencja i Prawo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Projekt jest przygotowany pod polskie regulacje (RODO, DAC7). Szczegóły dotyczące zasad współpracy znajdziesz w dokumentacji wewnętrznej.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+Zbudowane z myślą o przyszłości, gdzie AI i ludzie pracują ramię w ramię.
