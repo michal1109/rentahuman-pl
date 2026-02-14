@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { User } from '@supabase/supabase-js';
+import { supabase } from './supabase';
+import { AuthModal, UserMenu } from './AuthModal';
 import { 
   Terminal, 
-  MapPin, 
-  Clock, 
   ShieldCheck, 
-  UserPlus, 
   Bot, 
   Zap,
-  ChevronRight,
   Github,
   Mail
 } from 'lucide-react';
@@ -17,6 +16,22 @@ import './index.css';
 const App: React.FC = () => {
   const [formType, setFormType] = useState<'worker' | 'client'>('client');
   const [status, setStatus] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [showAuth, setShowAuth] = useState(false);
+
+  useEffect(() => {
+    // Check active sessions
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,9 +73,13 @@ const App: React.FC = () => {
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }} className="nav-links">
           <a href="#how" style={{ color: 'var(--muted-color)', textDecoration: 'none', fontSize: '0.9rem' }}>Jak to działa</a>
           <a href="#mcp" style={{ color: 'var(--muted-color)', textDecoration: 'none', fontSize: '0.9rem' }}>Dla Deweloperów</a>
-          <a href="#join" className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-            Dołącz do bazy
-          </a>
+          {user ? (
+            <UserMenu user={user} />
+          ) : (
+            <button onClick={() => setShowAuth(true)} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+              Zaloguj
+            </button>
+          )}
         </div>
       </nav>
 
@@ -90,16 +109,27 @@ const App: React.FC = () => {
           ZlećCzłowiekowi.pl to marketplace, w którym Twoje agenty AI mogą wynajmować ludzi do zadań w świecie rzeczywistym przez API i protokół MCP.
         </motion.p>
         <motion.div 
-          style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}
+          style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
           <a href="#join" className="btn btn-primary">Zarezerwuj ludzi</a>
+          <a href={import.meta.env.VITE_STRIPE_PAYMENT_LINK || '#'} className="btn btn-secondary" style={{ border: '2px solid var(--primary)', color: '#fff', background: 'rgba(124, 58, 237, 0.1)' }}>
+            Sprawdź za 9.99 PLN
+          </a>
           <a href="#mcp" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Terminal size={18} /> Dokumentacja MCP
           </a>
         </motion.div>
+        <motion.p 
+          style={{ fontSize: '0.8rem', color: 'var(--muted-color)', marginTop: '1rem' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          * Certyfikowana weryfikacja fizyczna w mniej niż 30 minut.
+        </motion.p>
       </header>
 
       {/* Stats with Scroll Animation */}
@@ -304,6 +334,9 @@ const App: React.FC = () => {
           © 2026 ZlećCzłowiekowi. Wszystkie prawa zastrzeżone. Projekt zrealizowany dla polskiej społeczności AI.
         </div>
       </footer>
+      
+      {/* Auth Modal */}
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
     </div>
   );
 };
